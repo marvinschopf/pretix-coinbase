@@ -15,6 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from collections import OrderedDict
+from django import forms
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _  # NoQA
 from pretix.base.models import OrderPayment, OrderRefund
@@ -25,3 +27,19 @@ class Coinbase(BasePaymentProvider):
     identifier = "coinbase"
     verbose_name = _("Coinbase Commerce")
     public_name = _("Coinbase")
+
+    @property
+    def settings_form_fields(self):
+        return OrderedDict(
+            list(super().settings_form_fields.items())
+            + [
+                (
+                    "coinbase_api_key",
+                    forms.CharField(
+                        widget=forms.Textarea,
+                        label=_("Coinbase Commerce API key"),
+                        required=True,
+                    ),
+                )
+            ]
+        )
