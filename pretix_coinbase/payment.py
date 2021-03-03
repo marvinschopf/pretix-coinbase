@@ -17,10 +17,13 @@ limitations under the License.
 
 from collections import OrderedDict
 from django import forms
+from django.http import HttpRequest
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _  # NoQA
 from pretix.base.models import OrderPayment, OrderRefund
 from pretix.base.payment import BasePaymentProvider, PaymentException
+
+from coinbase_commerce.client import Client
 
 
 class Coinbase(BasePaymentProvider):
@@ -43,3 +46,17 @@ class Coinbase(BasePaymentProvider):
                 )
             ]
         )
+
+    def execute_payment(self, request: HttpRequest, payment: OrderPayment):
+        client = Client(api_key=self.settings.coinbase_api_key)
+        charge = client.charge.create(
+            name=payment.order.event.name,
+            description=payment.order.event.name,
+            local_price={
+                "amount": payment.amount,
+                "currency": payment.order.event.currency,
+            },
+            pricing_type="fixed_price",
+            metadata={"paymentId": payment.id},
+        )
+        return charge.data.hosted_url
