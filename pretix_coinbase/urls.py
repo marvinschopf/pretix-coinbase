@@ -19,9 +19,20 @@ from django.conf.urls import url, include
 from pretix.multidomain import event_url
 
 event_patterns = [
-    url(r'^coinbase/', include([
-        event_url(r'^webhook/$', webhook, name='webhook', require_live=False),
-        event_url(r'^redirect/$', redirect_view, name='redirect', require_live=False),
-        url(r'^return/(?P<order>[^/]+)/(?P<hash>[^/]+)/(?P<payment>[^/]+)/$', ReturnView.as_view(), name='return'),
-    ])),
+    url(
+        r"^coinbase/",
+        include(
+            [
+                event_url(r"^webhook/$", webhook, name="webhook", require_live=False),
+                event_url(
+                    r"^redirect/$", redirect_view, name="redirect", require_live=False
+                ),
+                url(
+                    r"^return/(?P<order>[^/]+)/(?P<hash>[^/]+)/(?P<payment>[^/]+)/$",
+                    ReturnView.as_view(),
+                    name="return",
+                ),
+            ]
+        ),
+    ),
 ]

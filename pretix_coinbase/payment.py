@@ -49,10 +49,13 @@ class Coinbase(BasePaymentProvider):
     @cached_property
     def client(self):
         from coinbase_commerce.client import Client
+
         return Client(api_key=self.settings.coinbase_api_key)
 
     def checkout_confirm_render(self, request: HttpRequest, order: Order):
-        return _("After you confirm your order, you will be automatically redirected to Coinbase.")
+        return _(
+            "After you confirm your order, you will be automatically redirected to Coinbase."
+        )
 
     def execute_payment(self, request: HttpRequest, payment: OrderPayment):
         charge = self.client.charge.create(
