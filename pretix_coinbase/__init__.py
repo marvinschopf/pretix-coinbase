@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy
 
 try:
@@ -40,6 +41,15 @@ class PluginApp(PluginConfig):
 
     def ready(self):
         from . import signals  # NOQA
+
+    @cached_property
+    def compatibility_errors(self):
+        errs = []
+        try:
+            import coinbase_commerce  # NOQA
+        except ImportError:
+            errs.append("Python package 'coinbase-commerce' is not installed.")
+        return errs
 
 
 default_app_config = "pretix_coinbase.PluginApp"
