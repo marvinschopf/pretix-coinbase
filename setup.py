@@ -28,7 +28,7 @@ cmdclass = {"build": CustomBuild}
 setup(
     name="pretix-coinbase",
     version=__version__,
-    description="Short description",
+    description="Accept payments via Coinbase",
     long_description=long_description,
     url="https://github.com/marvinschopf/pretix-coinbase",
     author="Marvin Schopf",

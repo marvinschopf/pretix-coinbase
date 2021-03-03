@@ -15,7 +15,7 @@ class PluginApp(PluginConfig):
     class PretixPluginMeta:
         name = gettext_lazy("Coinbase")
         author = "Marvin Schopf"
-        description = gettext_lazy("Short description")
+        description = gettext_lazy("Accept payments via Coinbase")
         visible = True
         version = __version__
         category = "PAYMENT"
