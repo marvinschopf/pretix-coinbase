@@ -15,16 +15,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from django.dispatch import receiver
-from pretix.base.signals import (
-    logentry_display,
-    register_payment_providers,
-    requiredaction_display,
-)
+from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _  # NoQA
+from pretix.base.models import OrderPayment, OrderRefund
+from pretix.base.payment import BasePaymentProvider, PaymentException
 
 
-@receiver(register_payment_providers, dispatch_uid="payment_coinbase")
-def register_payment_provider(sender, **kwargs):
-    from .payment import Coinbase
-
-    return Coinbase
+class Coinbase(BasePaymentProvider):
+    identifier = "coinbase"
+    verbose_name = _("Coinbase Commerce")
+    public_name = _("Coinbase")
